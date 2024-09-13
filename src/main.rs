@@ -9,10 +9,10 @@ pub mod download;
 #[command(version, about, long_about = None)]
 struct Args {
     /// Assembly Accession
-    #[arg(short, long)]
+    #[arg(group = "assembly", short, long)]
     accession: String,
     /// Assembly name
-    #[arg(short, long)]
+    #[arg(group = "assembly", short, long)]
     name: String,
 }
 
@@ -21,6 +21,7 @@ fn main() {
 
     let genome_accession: NCBIGenome = NCBIGenome::from_str(&args.accession, &args.name);
     //println!("{}", genome_accession.get_ftp_folder_url());
-    let url = genome_accession.get_assembly_report_url();
+    let url = genome_accession.get_assembly_sequence_url();
+    //let url = genome_accession.get_assembly_report_url();
     download(url.to_string()).expect("FAILURE")
 }
