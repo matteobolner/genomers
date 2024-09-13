@@ -58,28 +58,20 @@ impl GenomeAccession {
             ),
         }
     }
+    fn get_ftp_folder(&self, genome_name: &str) -> String {
+        let accession_code = &self.accession_code.clone();
+        let (part1, part2, part3) = (
+            &accession_code[0..3],
+            &accession_code[3..6],
+            &accession_code[6..9],
+        );
+        let ftp_folder = "ftp.ncbi.nlm.nih.gov/genomes/all";
+        format!(
+            "{}/{}/{}/{}/{}/{}_{}",
+            ftp_folder, &self.refseq_or_genbank, part1, part2, part3, &self.full_code, genome_name
+        )
+    }
 }
-
-fn get_ftp_folder(genome_accession: &GenomeAccession, genome_name: &str) -> String {
-    let accession_code = genome_accession.accession_code.clone();
-    let (part1, part2, part3) = (
-        &accession_code[0..3],
-        &accession_code[3..6],
-        &accession_code[6..9],
-    );
-    let ftp_folder = "ftp.ncbi.nlm.nih.gov/genomes/all";
-    format!(
-        "{}/{}/{}/{}/{}/{}_{}",
-        ftp_folder,
-        genome_accession.refseq_or_genbank,
-        part1,
-        part2,
-        part3,
-        genome_accession.full_code,
-        genome_name
-    )
-}
-
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
