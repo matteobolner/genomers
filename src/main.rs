@@ -24,41 +24,42 @@ impl RefSeqOrGenBank {
 }
 */
 
-struct GenomeAccession {
+struct NCBIGenome {
     version: u32,
     refseq_or_genbank: String,
     accession_code: String,
-    full_code: String,
+    assembly_accession: String,
+    assembly_name: String,
 }
 
-impl GenomeAccession {
-    fn from_str(input: &str) -> GenomeAccession {
-        if !validate_accession(input) {
-            panic!("Invalid format: {input}")
+impl NCBIGenome {
+    fn from_str(accession: &str, name: &str) -> NCBIGenome {
+        if !validate_accession(accession) {
+            panic!("Invalid format: {accession}")
         }
-        //return Err("Invalid format: {input}".to_string());
-        let split_on_underscore: Vec<&str> = input.split('_').collect();
+        let split_on_underscore: Vec<&str> = accession.split('_').collect();
         let accession_code = split_on_underscore[1].split(".").next().unwrap();
         let refseq_or_genbank = split_on_underscore[0];
-        let version: u32 = input
+        let version: u32 = accession
             .chars()
             .last()
             .unwrap()
             .to_digit(10)
             .expect("Incorrect version number");
-        GenomeAccession {
+        NCBIGenome {
             version,
             refseq_or_genbank: refseq_or_genbank.to_string(),
             accession_code: accession_code.to_string(),
-            full_code: format!(
+            assembly_accession: format!(
                 "{}_{}.{}",
                 refseq_or_genbank.to_string(),
                 accession_code,
                 &version.to_string()
             ),
+            assembly_name: name.to_string(),
         }
     }
-    fn get_ftp_folder(&self, genome_name: &str) -> String {
+    fn get_ftp_folder_url(&self) -> String {
         let accession_code = &self.accession_code.clone();
         let (part1, part2, part3) = (
             &accession_code[0..3],
@@ -68,10 +69,22 @@ impl GenomeAccession {
         let ftp_folder = "ftp.ncbi.nlm.nih.gov/genomes/all";
         format!(
             "{}/{}/{}/{}/{}/{}_{}",
-            ftp_folder, &self.refseq_or_genbank, part1, part2, part3, &self.full_code, genome_name
+            ftp_folder,
+            &self.refseq_or_genbank,
+            part1,
+            part2,
+            part3,
+            &self.assembly_accession,
+            &self.assembly_name
         )
     }
+
+    fn get_assembly_report_url(&self) -> String {
+        let folder_url = &self.get_ftp_folder_url();
+        folder_url.to_string() + "_assembly_report.txt"
+    }
 }
+
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -86,7 +99,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let genome_accession: GenomeAccession = GenomeAccession::from_str(&args.accession);
-    let genome_name = &args.name;
-    println!("{}", get_ftp_folder(&genome_accession, genome_name))
+    let genome_accession: NCBIGenome = NCBIGenome::from_str(&args.accession, &args.name);
+    println!("{}", genome_accession.get_ftp_folder_url());
+    println!("{}", genome_accession.get_assembly_report_url())
 }
