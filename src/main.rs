@@ -2,7 +2,7 @@ use clap::Parser;
 use regex::Regex;
 
 fn validate_accession(input: &str) -> bool {
-    let re = Regex::new(r"^[A-Z]{3}_[0-9]{9}\.[0-9]$").unwrap();
+    let re = Regex::new(r"^GC[A|F]_[0-9]{9}\.[0-9]$").unwrap();
     re.is_match(input)
 }
 
