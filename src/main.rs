@@ -24,15 +24,15 @@ impl RefSeqOrGenBank {
 }
 */
 
-#[derive(Debug)]
 struct GenomeAccession {
     version: u32,
     refseq_or_genbank: String,
     accession_code: String,
+    full_code: String,
 }
 
 impl GenomeAccession {
-    fn from_str(input: &str) -> Result<GenomeAccession, String> {
+    fn from_str(input: &str) -> GenomeAccession {
         if !validate_accession(input) {
             panic!("Invalid format: {input}")
         }
@@ -46,26 +46,55 @@ impl GenomeAccession {
             .unwrap()
             .to_digit(10)
             .expect("Incorrect version number");
-        println!("{}", version);
-        Ok(GenomeAccession {
-            version: version,
+        GenomeAccession {
+            version,
             refseq_or_genbank: refseq_or_genbank.to_string(),
             accession_code: accession_code.to_string(),
-        })
+            full_code: format!(
+                "{}_{}.{}",
+                refseq_or_genbank.to_string(),
+                accession_code,
+                &version.to_string()
+            ),
+        }
     }
+}
+
+fn get_ftp_folder(genome_accession: &GenomeAccession, genome_name: &str) -> String {
+    let accession_code = genome_accession.accession_code.clone();
+    let (part1, part2, part3) = (
+        &accession_code[0..3],
+        &accession_code[3..6],
+        &accession_code[6..9],
+    );
+    let ftp_folder = "ftp.ncbi.nlm.nih.gov/genomes/all";
+    format!(
+        "{}/{}/{}/{}/{}/{}_{}",
+        ftp_folder,
+        genome_accession.refseq_or_genbank,
+        part1,
+        part2,
+        part3,
+        genome_accession.full_code,
+        genome_name
+    )
 }
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
+    /// Assembly Accession
     #[arg(short, long)]
     accession: String,
+    /// Assembly name
+    #[arg(short, long)]
+    name: String,
 }
 
 fn main() {
     let args = Args::parse();
 
-    let genome_accession: Result<GenomeAccession, String> =
-        GenomeAccession::from_str(&args.accession);
-    println!("Accession: {:#?}", genome_accession)
+    let genome_accession: GenomeAccession = GenomeAccession::from_str(&args.accession);
+    let genome_name = &args.name;
+    println!("{}", get_ftp_folder(&genome_accession, genome_name))
 }
