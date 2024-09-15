@@ -94,3 +94,40 @@ impl NCBIGenome {
         validate_url(&assembly_sequence)
     }
 }
+
+#[cfg(test)]
+mod test_get_folder_url {
+    use crate::accession::NCBIGenome;
+
+    #[test]
+    fn valid_folder_url() {
+        let assembly_accession = "GCF_000005845.2";
+        let assembly_name = "ASM584v2";
+        let genome = NCBIGenome::from_str(assembly_accession, assembly_name);
+        assert_eq!(
+            genome.get_ftp_folder_url().to_string(),
+            "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2"
+        );
+    }
+
+    #[test]
+    fn valid_report_url() {
+        let assembly_accession = "GCF_000005845.2";
+        let assembly_name = "ASM584v2";
+        let genome = NCBIGenome::from_str(assembly_accession, assembly_name);
+        assert_eq!(
+            genome.get_assembly_report_url().to_string(),
+            "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_assembly_report.txt"
+        );
+    }
+    #[test]
+    fn valid_sequence_url() {
+        let assembly_accession = "GCF_000005845.2";
+        let assembly_name = "ASM584v2";
+        let genome = NCBIGenome::from_str(assembly_accession, assembly_name);
+        assert_eq!(
+            genome.get_assembly_sequence_url().to_string(),
+            "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz"
+        );
+    }
+}
