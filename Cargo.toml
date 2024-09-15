@@ -9,3 +9,4 @@ regex = "1.10.6"
 tokio = { version = "1.40.0", features= ["full"] }
 reqwest = { version = "0.12.7", features = ["stream", "blocking"] }
 url = "2.5.2"
+futures-util = "0.3.30"

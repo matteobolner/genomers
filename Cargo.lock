@@ -623,6 +623,7 @@ name = "ncbi_genome"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "futures-util",
  "regex",
  "reqwest",
  "tokio",
