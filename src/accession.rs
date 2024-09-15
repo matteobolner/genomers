@@ -96,7 +96,7 @@ impl NCBIGenome {
 }
 
 #[cfg(test)]
-mod test_get_folder_url {
+mod tests {
     use crate::accession::NCBIGenome;
 
     #[test]
