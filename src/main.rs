@@ -1,10 +1,11 @@
 use clap::Parser;
-use download::download;
 
 pub mod accession;
 use crate::accession::NCBIGenome;
 pub mod download;
+use download::download;
 
+/// Simple program to download genome information and sequence from NCBI
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -14,15 +15,13 @@ struct Args {
     /// Assembly name
     #[arg(required = true, short, long)]
     name: String,
-    /// Download assembly report
+    /// Download assembly report in txt format
     #[arg(group = "download", short, long)]
     report: bool,
-    /// Download assembly report
+    /// Download assembly sequence in fna.gz format
     #[arg(group = "download", short, long)]
     genome: bool,
 }
-
-//-a GCF_000005845.2 -n ASM584v2
 
 //TODO if no assembly name specified download the most recent (needs ftp?)
 

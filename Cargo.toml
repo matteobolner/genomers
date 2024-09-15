@@ -1,6 +1,6 @@
 [package]
-name = "ncbi_genome"
-version = "0.1.0"
+name = "genomers"
+version = "0.1.1"
 edition = "2021"
 
 [dependencies]

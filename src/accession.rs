@@ -95,6 +95,8 @@ impl NCBIGenome {
     }
 }
 
+///TESTS
+
 #[cfg(test)]
 mod tests {
     use crate::accession::NCBIGenome;
