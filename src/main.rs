@@ -36,7 +36,7 @@ fn main() {
         download(report_url.to_string()).expect("FAILURE")
     }
     if args.genome {
-        eprintln!("Downloading genome: {}", report_url);
+        eprintln!("Downloading genome: {}", sequence_url);
         download(sequence_url.to_string()).expect("FAILURE")
     };
 }
