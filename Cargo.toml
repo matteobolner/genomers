@@ -1,6 +1,6 @@
 [package]
 name = "genomers"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Matteo Bolner"]
 description = "Package to download NCBI genome data and metadata"
 edition = "2021"
