@@ -3,6 +3,10 @@ genomers is a rust package for downloading genome assembly data and metadata fro
 
 
 
+### Changelog
+- v0.1.5 Added GFF genome annotation to download options
+
+
 ### Features
 
 * Download the assembly report and assembly fasta sequence
