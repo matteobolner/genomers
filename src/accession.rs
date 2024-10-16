@@ -93,6 +93,16 @@ impl NCBIGenome {
         );
         validate_url(&assembly_sequence)
     }
+
+    /// Obtain url for the assembly annotation in GFF format
+    pub fn get_assembly_gff_url(&self) -> url::Url {
+        let folder_url = &self.get_ftp_folder_url();
+        let assembly_sequence = format!(
+            "{}/{}_{}_genomic.gff.gz",
+            folder_url, &self.assembly_accession, &self.assembly_name
+        );
+        validate_url(&assembly_sequence)
+    }
 }
 
 ///TESTS

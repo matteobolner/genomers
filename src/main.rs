@@ -21,6 +21,9 @@ struct Args {
     /// Download assembly sequence in fna.gz format
     #[arg(group = "download", short, long)]
     genome: bool,
+    /// Download assembly annotation in gff.gz format
+    #[arg(group = "download", long)]
+    gff: bool,
 }
 
 //TODO if no assembly name specified download the most recent (needs ftp?)
@@ -31,6 +34,8 @@ fn main() {
     let genome_accession: NCBIGenome = NCBIGenome::from_str(&args.accession, &args.name);
     let sequence_url = genome_accession.get_assembly_sequence_url();
     let report_url = genome_accession.get_assembly_report_url();
+    let gff_url = genome_accession.get_assembly_gff_url();
+
     if args.report {
         eprintln!("Downloading assembly report: {}", report_url);
         download(report_url.to_string()).expect("FAILURE")
@@ -38,5 +43,10 @@ fn main() {
     if args.genome {
         eprintln!("Downloading genome: {}", sequence_url);
         download(sequence_url.to_string()).expect("FAILURE")
+    };
+
+    if args.gff {
+        eprintln!("Downloading genome annotation (GFF): {}", sequence_url);
+        download(gff_url.to_string()).expect("FAILURE")
     };
 }
